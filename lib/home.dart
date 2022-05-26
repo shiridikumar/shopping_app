@@ -129,6 +129,52 @@ class _HomeState extends State<Home> {
   //   );
   // }
 
+  Widget categorybar(BuildContext context) {
+    List<String> categories = [
+      "Electronics",
+      "Fashion",
+      "Laptops",
+      "Mobiles",
+      "Books",
+      "Home",
+    ];
+    List<String> urls = [
+      "electronics.jpg",
+      "fashion.jpg",
+      "laptops.jpg",
+      "mobiles.jpg",
+      "books.jpeg",
+      "home.jpeg"
+    ];
+    return Container(
+      width: double.infinity,
+      height: 180,
+      // constraints: BoxConstraints(maxWidth: double.infinity, minWidth: 300.0),
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        shrinkWrap: true,
+        itemCount: categories == null ? 0 : categories.length,
+        itemBuilder: (BuildContext context, int index) {
+          return Container(
+              padding: EdgeInsets.symmetric(horizontal: 2.0),
+              child: Column(
+                children: <Widget>[
+                  CircleAvatar(
+                      radius: 60.0,
+                      child: ClipOval(
+                          child: Image.asset("assets/${urls[index]}",
+                              width: 140.0, height: 130.0, fit: BoxFit.cover))),
+                  Text(
+                    categories[index],
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  )
+                ],
+              ));
+        },
+      ),
+    );
+  }
+
   Widget searchbar(BuildContext context) {
     return Container(
       decoration: BoxDecoration(color: Colors.blue),
@@ -136,7 +182,7 @@ class _HomeState extends State<Home> {
       child: Row(
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.fromLTRB(20.0, 0.0, 10.0, 0.0),
+            padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
             child: buildsearch(context),
           ),
           input_search()
@@ -156,7 +202,11 @@ class _HomeState extends State<Home> {
           backgroundColor: Colors.blue[600]),
       body: Center(
         child: Column(
-          children: <Widget>[searchbar(context), searchlist],
+          children: <Widget>[
+            searchbar(context),
+            searchlist,
+            categorybar(context)
+          ],
         ),
       ),
     );
