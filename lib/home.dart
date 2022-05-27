@@ -150,7 +150,7 @@ class _HomeState extends State<Home> {
       "Home",
     ];
     List<String> urls = [
-      "electronics.jpg",
+      "electronics.jpeg",
       "fashion.jpg",
       "laptops.jpg",
       "mobiles.jpg",
@@ -346,24 +346,42 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
-      appBar: AppBar(
-          title: Text('shopNow',
-              style: TextStyle(
-                  fontFamily: "headfont", fontWeight: FontWeight.bold)),
-          // centerTitle: true,
-          backgroundColor: Colors.grey[700]),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            searchbar(context),
-            searchlist,
-            categorybar(context),
-            newoffers(context),
-            trending(context)
-          ],
+        backgroundColor: Colors.grey[100],
+        appBar: AppBar(
+            title: Text('shopNow',
+                style: TextStyle(
+                    fontFamily: "headfont", fontWeight: FontWeight.bold)),
+            // centerTitle: true,
+            backgroundColor: Colors.grey[700]),
+        body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              searchbar(context),
+              searchlist,
+              categorybar(context),
+              newoffers(context),
+              trending(context)
+            ],
+          ),
         ),
-      ),
-    );
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.list_alt_rounded),
+              label: 'Wishlist',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_pin_sharp),
+              label: 'Profile',
+            ),
+          ],
+          // currentIndex: _selectedIndex,
+          selectedItemColor: Colors.black,
+          // onTap: _onItemTapped,
+        ));
   }
 }

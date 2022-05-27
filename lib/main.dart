@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:first/home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:first/vendorhome.dart';
+import 'package:first/additem.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,6 +15,8 @@ void main() async {
     routes: {
       "/": (context) => Login(),
       "/home": (context) => Home(),
+      "/vendorhome": (context) => VendorHome(),
+      "/additem": (context) => additem()
     },
   ));
 }
@@ -24,22 +28,25 @@ class Login extends StatefulWidget {
   State<Login> createState() => _LoginState();
 }
 
+enum logintype { user, vendor }
+
 class _LoginState extends State<Login> {
   int counter = 0;
   String tex = "hello";
   String password = "";
+  logintype? type = logintype.user;
   CollectionReference ref = FirebaseFirestore.instance.collection("users");
   Widget build(BuildContext context) {
     return Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/bg.jpg"),
-            fit: BoxFit.cover,
-          ),
-        ),
+        // decoration: BoxDecoration(
+        //   image: DecorationImage(
+        //     // image: AssetImage("assets/bg.jpg"),
+        //     fit: BoxFit.cover,
+        //   ),
+        // ),
         child: SafeArea(
             child: Scaffold(
-                backgroundColor: Colors.transparent,
+                backgroundColor: Colors.grey[200],
                 body: Center(
                   child: Column(children: <Widget>[
                     Container(
@@ -47,7 +54,7 @@ class _LoginState extends State<Login> {
                       child: Text("shopNow",
                           style: TextStyle(
                               fontSize: 30.0,
-                              color: Colors.white,
+                              color: Colors.black,
                               fontWeight: FontWeight.bold,
                               fontFamily: "headfont")),
                     ),
@@ -55,7 +62,7 @@ class _LoginState extends State<Login> {
                       constraints: BoxConstraints(minWidth: 100, maxWidth: 350),
                       decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(25.0)),
+                          borderRadius: BorderRadius.circular(10.0)),
                       padding:
                           EdgeInsets.symmetric(vertical: 5, horizontal: 10.0),
                       child: TextFormField(
@@ -69,7 +76,7 @@ class _LoginState extends State<Login> {
                           });
                         },
                         style: TextStyle(
-                            color: Colors.blue,
+                            color: Colors.black,
                             decorationStyle: TextDecorationStyle.dotted,
                             decorationColor: Colors.white),
                       ),
@@ -79,7 +86,7 @@ class _LoginState extends State<Login> {
                       constraints: BoxConstraints(minWidth: 100, maxWidth: 350),
                       decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(25.0)),
+                          borderRadius: BorderRadius.circular(10.0)),
                       padding:
                           EdgeInsets.symmetric(vertical: 5, horizontal: 10.0),
                       child: TextFormField(
@@ -94,33 +101,81 @@ class _LoginState extends State<Login> {
                           });
                         },
                         style: TextStyle(
-                            color: Colors.blue,
+                            color: Colors.black,
                             decorationStyle: TextDecorationStyle.dotted,
                             decorationColor: Colors.white),
                       ),
                     ),
                     Container(
-                      constraints:
-                          BoxConstraints(minWidth: 350.0, maxWidth: 350.0),
+                      constraints: BoxConstraints(
+                          minWidth: 350.0, maxWidth: 350.0, minHeight: 30.0),
                       padding: EdgeInsets.symmetric(vertical: 20.0),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            shape: StadiumBorder(), primary: Colors.blue[200]),
-                        child: Text("Login",
-                            style: TextStyle(color: Colors.white)),
-                        onPressed: () {
-                          ref.add({"name": tex});
-                          print(tex);
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                              '/home', (route) => false);
-                        },
-                        // color: Colors.blue,
+                      child: Material(
+                        color: Colors.blue,
+                        child: InkWell(
+                          child: Container(
+                            height: 50.0,
+                            child: Center(
+                              child: Text("Login",
+                                  style: TextStyle(color: Colors.white)),
+                            ),
+                          ),
+                          onTap: () {
+                            // ref.add({"name": tex});
+                            // print(tex);
+                            if (type == logintype.user) {
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                  '/home', (route) => false);
+                            } else {
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                  '/vendorhome', (route) => false);
+                            }
+                          },
+                          // color: Colors.blue,
+                        ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 150, 0, 0),
-                      child: Icon(Icons.shopping_cart,
-                          color: Colors.blue, size: 150.0),
+                    Container(
+                      constraints: BoxConstraints(
+                        minWidth: 10.0,
+                        maxWidth: double.infinity,
+                      ),
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                            constraints: BoxConstraints(
+                                maxWidth: 150.0, maxHeight: 100.0),
+                            child: ListTile(
+                              title: Text('User'),
+                              leading: Radio(
+                                value: logintype.user,
+                                groupValue: type,
+                                onChanged: (logintype? value) {
+                                  setState(() {
+                                    type = value;
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
+                          Container(
+                            constraints: BoxConstraints(
+                                maxWidth: 150.0, maxHeight: 100.0),
+                            child: ListTile(
+                              title: const Text('Vendor'),
+                              leading: Radio(
+                                value: logintype.vendor,
+                                groupValue: type,
+                                onChanged: (logintype? value) {
+                                  setState(() {
+                                    type = value;
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     )
                   ]),
                 ))));
