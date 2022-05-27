@@ -1,8 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:first/home.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
     initialRoute: "/",
     routes: {
       "/": (context) => Login(),
@@ -22,7 +28,7 @@ class _LoginState extends State<Login> {
   int counter = 0;
   String tex = "hello";
   String password = "";
-  @override
+  CollectionReference ref = FirebaseFirestore.instance.collection("users");
   Widget build(BuildContext context) {
     return Container(
         decoration: BoxDecoration(
@@ -103,6 +109,7 @@ class _LoginState extends State<Login> {
                         child: Text("Login",
                             style: TextStyle(color: Colors.white)),
                         onPressed: () {
+                          ref.add({"name": tex});
                           print(tex);
                           Navigator.of(context).pushNamedAndRemoveUntil(
                               '/home', (route) => false);
