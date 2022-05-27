@@ -43,7 +43,7 @@ class _State extends State<VendorHome> {
           // style: ButtonStyle(
           //     backgroundColor: MaterialStateProperty.all(Colors.grey[400])),
           onPressed: () {
-            Navigator.pushReplacementNamed(context, '/home.dart');
+            Navigator.pushNamed(context, '/additem');
           },
           child: Padding(
             padding: const EdgeInsets.all(0.0),
