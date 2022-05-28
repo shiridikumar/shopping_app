@@ -4,6 +4,9 @@ import 'package:first/home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:first/vendorhome.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/services.dart';
+import 'dart:typed_data';
 
 class additem extends StatefulWidget {
   const additem({Key? key}) : super(key: key);
@@ -14,13 +17,25 @@ class additem extends StatefulWidget {
 
 class _additemState extends State<additem> {
   List<Widget> specs = [];
+  dynamic imagevalue;
   List<Widget> specsupd = [];
-  List<String> value_indices = ['', '', '', ''];
+  List<String> value_indices = ['', 'Product Type', '', ''];
+
+  Widget setpic = Image.asset(
+    'assets/no-image.jpg',
+    height: 250.0,
+  );
+  int index = 3;
   void addfields() {
+    value_indices.add('');
+    value_indices.add('');
     List<Widget> myArray = [
-      gen_textfield(3, 'Enter Field name', 'Field name', 250, 0),
-      gen_textfield(3, 'Enter Field value', 'Field value', 250, 0)
+      gen_textfield(
+          this.index + 1, 'Enter Field name', 'Field name', 250, 0, 0),
+      gen_textfield(
+          this.index + 2, 'Enter Field value', 'Field value', 250, 0, 0)
     ];
+    this.index += 2;
     this.specs.add(Container(
         constraints: BoxConstraints(maxHeight: 200.0),
         child: GridView.count(
@@ -38,12 +53,13 @@ class _additemState extends State<additem> {
   }
 
   Widget gen_textfield(
-      int ind, String hint, String label, double width, int height) {
+      int ind, String hint, String label, double width, int height, int type) {
     return Container(
       padding: EdgeInsets.all(5.0),
       constraints: BoxConstraints(maxWidth: width),
       child: TextFormField(
-        obscureText: true,
+        keyboardType: (type == 1) ? TextInputType.number : TextInputType.text,
+        // obscureText: true,
         decoration: InputDecoration(
             fillColor: Colors.white,
             filled: true,
@@ -55,10 +71,12 @@ class _additemState extends State<additem> {
             enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(5.0),
                 borderSide: BorderSide(color: Colors.grey))),
-        onChanged: (text) {},
+        onChanged: (text) {
+          this.value_indices[ind] = text;
+        },
         style: TextStyle(
             color: Colors.black,
-            decorationStyle: TextDecorationStyle.dotted,
+            // decorationStyle: TextDecorationStyle.dotted,
             decorationColor: Colors.white),
       ),
     );
@@ -80,12 +98,12 @@ class _additemState extends State<additem> {
                   Text("Fill in the following details",
                       style: TextStyle(fontFamily: "mainfont", fontSize: 18.0)),
                   SizedBox(height: 20.0),
-                  gen_textfield(0, '', "Prodcut Name", 300, 0),
+                  gen_textfield(0, '', "Prodcut Name", 300, 0, 0),
                   Container(
                       padding: EdgeInsets.all(5.0),
                       constraints: BoxConstraints(maxWidth: 300.0),
                       child: DropdownButton<String>(
-                        hint: Text('Product Type'),
+                        hint: Text(this.value_indices[1]),
                         items: <String>[
                           'Watch',
                           'Camera',
@@ -103,10 +121,15 @@ class _additemState extends State<additem> {
                             child: Text(value),
                           );
                         }).toList(),
-                        onChanged: (_) {},
+                        onChanged: (value) {
+                          this.value_indices[1] = value.toString();
+                          setState(() {
+                            this.value_indices[1] = value.toString();
+                          });
+                        },
                       )),
-                  gen_textfield(1, '', "MRP", 300, 0),
-                  gen_textfield(0, '', "Final Price", 300, 0),
+                  gen_textfield(2, '', "MRP", 300, 0, 1),
+                  gen_textfield(3, '', "Final Price", 300, 0, 1),
                 ]),
             Column(children: this.specsupd),
             SizedBox(height: 30.0),
@@ -133,19 +156,41 @@ class _additemState extends State<additem> {
         constraints: BoxConstraints(minWidth: 400.0),
         decoration: BoxDecoration(color: Colors.white),
         child: Column(children: <Widget>[
-          Image.asset(
-            'assets/no-image.jpg',
-            height: 250.0,
-          ),
+          setpic,
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  uploadimage();
+                },
                 style: ElevatedButton.styleFrom(
                     primary: Colors.red, minimumSize: Size(200.0, 50.0)),
                 child: Text('Upload image', style: TextStyle(fontSize: 20.0))),
           )
         ]));
+  }
+
+  void uploadimage() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+        withData: true,
+        type: FileType.custom,
+        allowedExtensions: ['png', 'jpg', 'svg', 'jpeg']);
+
+    if (result != null) {
+      PlatformFile file = result.files.first;
+
+      setState(() {
+        this.imagevalue = file.bytes;
+        print(result);
+        this.setpic = Image.memory(
+          this.imagevalue,
+          height: 250.0,
+        );
+      });
+    } else {
+      // User canceled the picker
+
+    }
   }
 
   @override
@@ -167,7 +212,9 @@ class _additemState extends State<additem> {
             Container(
               padding: EdgeInsets.all(20.0),
               child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    print(this.value_indices);
+                  },
                   child: Text("Add", style: TextStyle(fontSize: 20.0)),
                   style: ElevatedButton.styleFrom(
                       primary: Colors.grey[800],
