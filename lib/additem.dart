@@ -7,6 +7,9 @@ import 'package:first/vendorhome.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
 import 'dart:typed_data';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:sto'
 
 class additem extends StatefulWidget {
   const additem({Key? key}) : super(key: key);
@@ -16,11 +19,13 @@ class additem extends StatefulWidget {
 }
 
 class _additemState extends State<additem> {
+  FirebaseStorage storage = FirebaseStorage.instance;
+
   List<Widget> specs = [];
+  CollectionReference ref = FirebaseFirestore.instance.collection("products");
   dynamic imagevalue;
   List<Widget> specsupd = [];
   List<String> value_indices = ['', 'Product Type', '', ''];
-
   Widget setpic = Image.asset(
     'assets/no-image.jpg',
     height: 250.0,
@@ -181,7 +186,6 @@ class _additemState extends State<additem> {
 
       setState(() {
         this.imagevalue = file.bytes;
-        print(result);
         this.setpic = Image.memory(
           this.imagevalue,
           height: 250.0,
@@ -191,6 +195,34 @@ class _additemState extends State<additem> {
       // User canceled the picker
 
     }
+  }
+
+  void upload() async {
+    // await FirebaseAuth.instance.signInAnonymously();
+    Map<String, dynamic> details = {};
+    Reference reference = storage.ref();
+    details["product_name"] = this.value_indices[0];
+    details["product_type"] = this.value_indices[1];
+    details["mrp"] = this.value_indices[2];
+    details["final_price"] = this.value_indices[3];
+    for (int i = 4; i < this.value_indices.length; i += 2) {
+      if (this.value_indices[i] != "" && this.value_indices[i + 1] != "") {
+        details[this.value_indices[i]] = this.value_indices[i + 1];
+      }
+    }
+
+    details["Category"] = "electronics";
+    DocumentReference docid = await ref.add(details);
+    UploadTask uploadTask =
+        reference.child("images/" + docid.id + "/").putData(this.imagevalue);
+    await uploadTask.whenComplete(() async {
+      String url =
+          await reference.child("images/" + docid.id + "/").getDownloadURL();
+      ref.doc(docid.id).update({"image_url": url});
+      print(details);
+    }).catchError((onError) {
+      print(onError);
+    });
   }
 
   @override
@@ -214,6 +246,7 @@ class _additemState extends State<additem> {
               child: ElevatedButton(
                   onPressed: () {
                     print(this.value_indices);
+                    upload();
                   },
                   child: Text("Add", style: TextStyle(fontSize: 20.0)),
                   style: ElevatedButton.styleFrom(

@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:first/vendorhome.dart';
 import 'package:first/additem.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,6 +36,8 @@ class _LoginState extends State<Login> {
   String tex = "hello";
   String password = "";
   logintype? type = logintype.user;
+  FirebaseAuth firebase = FirebaseAuth.instance;
+
   CollectionReference ref = FirebaseFirestore.instance.collection("users");
   Widget build(BuildContext context) {
     return Container(
@@ -121,6 +124,10 @@ class _LoginState extends State<Login> {
                             ),
                           ),
                           onTap: () {
+                            firebase.signInWithEmailAndPassword(
+                              email: "shiridikumarpeddinti836@gmail.com",
+                              password: "2002@Nvslapsk",
+                            );
                             // ref.add({"name": tex});
                             // print(tex);
                             if (type == logintype.user) {
