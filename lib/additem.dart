@@ -9,6 +9,8 @@ import 'package:flutter/services.dart';
 import 'dart:typed_data';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth_web/firebase_auth_web.dart';
+// import 'package:firebase_core_web/firebase_core_web.dart';
 // import 'package:sto'
 
 class additem extends StatefulWidget {
@@ -22,6 +24,54 @@ class _additemState extends State<additem> {
   FirebaseStorage storage = FirebaseStorage.instance;
 
   List<Widget> specs = [];
+  List<String> types = [];
+  String cate = "";
+  Map<String, List<String>> categories = {
+    "Electronics": [
+      'Watch',
+      'Camera',
+      'Telivision',
+      'Washing machine',
+      'PC',
+      'Fan',
+      'AC',
+      'Headset',
+      'TubeLight',
+      'Other'
+    ],
+    "Fashion": [
+      "Shoes",
+      "Shirts",
+      "Pants",
+      "Trousers",
+      "Saree",
+      "Socks",
+      "Sandals",
+      "Slippers",
+      "Suit",
+      "Other"
+    ],
+    "Laptops": ["Laptops", "PC"],
+    "Mobiles": ["Mobiles", "Tablets", "Ipad"],
+    "Stationery": ["Books", "Pens", "Novels", "Other"],
+    "Home": [
+      "Sofa",
+      "Matrice",
+      "Cort",
+      "Tables",
+      "Chairs",
+      "Dining table",
+      "Blankets",
+      "Pillows",
+      "Bed sheets",
+      "Bags",
+      "Utensils",
+      "Trolley",
+      "Bottles",
+      "Plates",
+      "Dining set"
+    ]
+  };
   CollectionReference ref = FirebaseFirestore.instance.collection("products");
   dynamic imagevalue;
   List<Widget> specsupd = [];
@@ -109,18 +159,7 @@ class _additemState extends State<additem> {
                       constraints: BoxConstraints(maxWidth: 300.0),
                       child: DropdownButton<String>(
                         hint: Text(this.value_indices[1]),
-                        items: <String>[
-                          'Watch',
-                          'Camera',
-                          'Telivision',
-                          'Washing machine',
-                          'PC',
-                          'Fan',
-                          'AC',
-                          'Headset',
-                          'TubeLight',
-                          'Other'
-                        ].map((String value) {
+                        items: this.types.map((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
                             child: Text(value),
@@ -211,7 +250,7 @@ class _additemState extends State<additem> {
       }
     }
 
-    details["Category"] = "electronics";
+    details["Category"] = this.cate;
     DocumentReference docid = await ref.add(details);
     UploadTask uploadTask =
         reference.child("images/" + docid.id + "/").putData(this.imagevalue);
@@ -227,6 +266,15 @@ class _additemState extends State<additem> {
 
   @override
   Widget build(BuildContext context) {
+    final arguments = (ModalRoute.of(context)?.settings.arguments ??
+        <String, dynamic>{}) as Map;
+    print(arguments);
+    if (categories[arguments["category"]] != null) {
+      print("helllllo");
+      this.types = categories[arguments["category"]]!;
+    }
+    this.cate = arguments["category"];
+    for (int i = 0; i < this.categories.length; i++) {}
     return Scaffold(
         backgroundColor: Colors.grey[100],
         appBar: AppBar(

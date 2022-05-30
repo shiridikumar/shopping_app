@@ -16,7 +16,7 @@ class _State extends State<VendorHome> {
     "Fashion",
     "Laptops",
     "Mobiles",
-    "Books",
+    "Stationery",
     "Home",
   ];
   List<String> urls = [
@@ -43,17 +43,23 @@ class _State extends State<VendorHome> {
           // style: ButtonStyle(
           //     backgroundColor: MaterialStateProperty.all(Colors.grey[400])),
           onPressed: () {
-            Navigator.pushNamed(context, '/additem');
+            Navigator.pushNamed(context, '/additem',
+                arguments: {"category": name});
           },
           child: Padding(
             padding: const EdgeInsets.all(0.0),
             child: Column(
               children: [
-                Image.asset("assets/" + item,
-                    width: 300.0, height: 150.0, fit: BoxFit.cover),
-                Text(
-                  name,
-                  style: TextStyle(fontFamily: "mainfont", fontSize: 20.0),
+                Expanded(
+                  flex: 8,
+                  child: Image.asset("assets/" + item, fit: BoxFit.cover),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    name,
+                    style: TextStyle(fontFamily: "mainfont", fontSize: 20.0),
+                  ),
                 )
               ],
             ),

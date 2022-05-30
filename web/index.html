@@ -36,6 +36,26 @@
   <!-- This script installs service_worker.js to provide PWA functionality to
        application. For more information, see:
        https://developers.google.com/web/fundamentals/primers/service-workers -->
+       <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.2/firebase-app.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyDuaQeWemBV6yVKDONoj6iL7-OEV-aN2Ko",
+          authDomain: "shopnow-db03c.firebaseapp.com",
+          databaseURL: "https://shopnow-db03c-default-rtdb.firebaseio.com",
+          projectId: "shopnow-db03c",
+          storageBucket: "shopnow-db03c.appspot.com",
+          messagingSenderId: "858261657685",
+          appId: "1:858261657685:web:e0665a791e3222b0d9dcdc"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+      </script>
   <script>
     var serviceWorkerVersion = null;
     var scriptLoaded = false;
@@ -49,6 +69,7 @@
       scriptTag.type = 'application/javascript';
       document.body.append(scriptTag);
     }
+    
 
     if ('serviceWorker' in navigator) {
       // Service workers are supported. Use them.

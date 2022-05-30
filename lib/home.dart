@@ -77,7 +77,7 @@ class _HomeState extends State<Home> {
   Widget input_search() {
     return Container(
       decoration: BoxDecoration(color: Colors.grey[600]),
-      constraints: BoxConstraints(minWidth: 200.0, maxWidth: 300.0),
+      constraints: BoxConstraints(maxWidth: 200.0),
       // child: Text("another element")
       child: TextFormField(
         controller: _controller,
@@ -146,7 +146,7 @@ class _HomeState extends State<Home> {
       "Fashion",
       "Laptops",
       "Mobiles",
-      "Books",
+      "Stationery",
       "Home",
     ];
     List<String> urls = [
@@ -170,21 +170,34 @@ class _HomeState extends State<Home> {
         itemBuilder: (BuildContext context, int index) {
           return Container(
               padding: EdgeInsets.symmetric(horizontal: 3.0),
-              child: Column(
-                children: <Widget>[
-                  CircleAvatar(
-                      radius: 40.0,
-                      child: ClipOval(
-                          child: Image.asset("assets/${urls[index]}",
-                              width: 140.0, height: 130.0, fit: BoxFit.cover))),
-                  Text(
-                    categories[index],
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontFamily: "mainfont",
-                        fontSize: 12.0),
-                  )
-                ],
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    primary: Colors.white,
+                    elevation: 0.0,
+                    padding: EdgeInsets.all(0)),
+                onPressed: () {
+                  Navigator.pushNamed(context, "/categorylist",
+                      arguments: {"category": categories[index]});
+                },
+                child: Column(
+                  children: <Widget>[
+                    CircleAvatar(
+                        radius: 40.0,
+                        child: ClipOval(
+                            child: Image.asset("assets/${urls[index]}",
+                                width: 140.0,
+                                height: 130.0,
+                                fit: BoxFit.cover))),
+                    Text(
+                      categories[index],
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontFamily: "mainfont",
+                          fontSize: 12.0,
+                          color: Colors.black),
+                    )
+                  ],
+                ),
               ));
         },
       ),
@@ -245,12 +258,12 @@ class _HomeState extends State<Home> {
                 itemCount: this.cards.length,
                 options: CarouselOptions(
                     // height: 200.0,
-                    enlargeCenterPage: true,
+                    // enlargeCenterPage: true,
                     autoPlay: true,
                     aspectRatio: 12 / 8,
-                    autoPlayCurve: Curves.fastOutSlowIn,
+                    // autoPlayCurve: Curves.fastOutSlowIn,
                     enableInfiniteScroll: true,
-                    autoPlayAnimationDuration: Duration(milliseconds: 800),
+                    autoPlayAnimationDuration: Duration(milliseconds: 500),
                     viewportFraction: 1.0,
                     onPageChanged: (index, reason) {
                       setState(() {
@@ -292,17 +305,23 @@ class _HomeState extends State<Home> {
         elevation: 0.0,
         borderOnForeground: true,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            Image.asset(
-              "assets/trending/" + item,
-              height: 200.0,
+            Expanded(
+              flex: 9,
+              child: Image.asset(
+                "assets/trending/" + item,
+              ),
             ),
-            Container(
-                padding: EdgeInsets.all(5.0),
-                decoration: BoxDecoration(
-                    shape: BoxShape.rectangle, color: Colors.red[900]),
-                child: Text("Up to 40% off",
-                    style: TextStyle(color: Colors.white)))
+            Expanded(
+              flex: 1,
+              child: Container(
+                  padding: EdgeInsets.all(5.0),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.rectangle, color: Colors.red[900]),
+                  child: Text("Up to 40% off",
+                      style: TextStyle(color: Colors.white))),
+            )
           ],
         ),
       ),
