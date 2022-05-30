@@ -21,11 +21,63 @@ class _category_menuState extends State<category_menu> {
   List<dynamic> menu = [];
   CollectionReference ref = FirebaseFirestore.instance.collection("products");
 
-  Widget getcard(item) {
-    print(item);
+  Widget getcard(item, context) {
+    // print(item);
+
     return Container(
-        child: Image.network(
-            "https://firebasestorage.googleapis.com/v0/b/shopnow-db03c.appspot.com/o/images%2FZG0xZQMVw7t4FPmyBqVW?alt=media&token=65c964ee-4c47-4e3d-b310-0c8949df35d0"));
+        decoration: BoxDecoration(color: Colors.white),
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.pushNamed(context, "/itemdetails", arguments: item);
+          },
+          style: ElevatedButton.styleFrom(
+              primary: Colors.white, padding: EdgeInsets.zero, elevation: 0.0),
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                  flex: 8,
+                  child: Image.network(item["image_url"], fit: BoxFit.cover)),
+              Expanded(
+                flex: 1,
+                child: Text(
+                  item["product_name"],
+                  style: TextStyle(
+                      fontFamily: "mainfont",
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black),
+                ),
+              ),
+              Expanded(
+                  flex: 1,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        decoration: BoxDecoration(color: Colors.red[900]),
+                        child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Text(
+                            "\u{20B9}${item['final_price']}",
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 12.0),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text("\u{20B9}${item['mrp']}",
+                            style: TextStyle(
+                                decoration: TextDecoration.lineThrough,
+                                fontSize: 10.0,
+                                fontWeight: FontWeight.w300,
+                                color: Colors.black)),
+                      )
+                    ],
+                  ))
+            ],
+          ),
+        ));
   }
 
   Widget filters(BuildContext context) {
@@ -49,7 +101,7 @@ class _category_menuState extends State<category_menu> {
                 crossAxisCount: 2,
                 childAspectRatio: 1 / 1.5,
                 children: this.menu.map((item) {
-                  return getcard(item);
+                  return getcard(item, context);
                 }).toList()),
           ),
         ],
@@ -65,9 +117,10 @@ class _category_menuState extends State<category_menu> {
     // print(arguments);
     dynamic data;
     await ref.where("Category", isEqualTo: "Mobiles").get().then((value) {
-      data = value.docs.map((data) => print(data.data())).toList();
+      data = value.docs.map((data) => data.data()).toList();
       if (this.fetched == 0) {
         setState(() {
+          // print(data);
           this.menu = data;
           this.menulist = menugrid(context);
           this.fetched = 1;

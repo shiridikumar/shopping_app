@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:first/categorymenu.dart';
+import 'package:first/item.dart';
 import 'package:flutter/material.dart';
 import 'package:first/home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,6 +9,7 @@ import 'package:first/vendorhome.dart';
 import 'package:first/additem.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:first/categorymenu.dart';
+import 'package:first/item.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +30,8 @@ void main() async {
       "/home": (context) => Home(),
       "/vendorhome": (context) => VendorHome(),
       "/additem": (context) => additem(),
-      "/categorylist": ((context) => category_menu())
+      "/categorylist": ((context) => category_menu()),
+      "/itemdetails": ((context) => itemdetails())
     },
   ));
 }
