@@ -84,13 +84,17 @@ class _itemdetailsState extends State<itemdetails> {
             decoration: BoxDecoration(color: Colors.white),
             padding: EdgeInsets.all(10),
             child: Column(children: <Widget>[
-              Text(
-                "About this item",
-                style: TextStyle(fontSize: 20.0),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Text(
+                      "About this item",
+                      style: TextStyle(fontSize: 20.0),
+                    ),
+                  ),
+                ],
               ),
-              Text(
-                  "About this item hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh",
-                  style: TextStyle(fontSize: 20.0))
             ]))
       ],
     ));
